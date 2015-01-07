@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="regress">
+      <UniqueIdentifier>{c12fa9ac-05f6-45cb-bb38-f575a3a78f47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="script">
+      <UniqueIdentifier>{bc5d92fe-cfa8-4220-b3cf-c63aede7db41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{48aa9bb2-be34-41e8-86a0-adbbe25261db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Makefile" />
+    <None Include="..\uninstall_textsearch_ja.sql">
+      <Filter>script</Filter>
+    </None>
+    <None Include="..\textsearch_ja.sql.in">
+      <Filter>script</Filter>
+    </None>
+    <None Include="..\sql\textsearch_ja.sql">
+      <Filter>regress</Filter>
+    </None>
+    <None Include="..\sql\convert.sql">
+      <Filter>regress</Filter>
+    </None>
+    <None Include="..\sql\init.sql">
+      <Filter>regress</Filter>
+    </None>
+    <None Include="..\expected\convert.out">
+      <Filter>regress</Filter>
+    </None>
+    <None Include="..\expected\init.out">
+      <Filter>regress</Filter>
+    </None>
+    <None Include="..\expected\textsearch_ja.out">
+      <Filter>regress</Filter>
+    </None>
+    <None Include="..\doc\textsearch_ja.html">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\doc\index.html">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\doc\index-ja.html">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\COPYRIGHT.textsearch_ja" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\pgut\pgut-be.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\textsearch_ja.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\encoding_utf8.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\encoding_eucjp.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\pgut\pgut-be.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\textsearch_ja.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

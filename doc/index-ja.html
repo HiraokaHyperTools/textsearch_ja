@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<link rel="icon" type="image/png" href="http://pgfoundry.org/images/elephant-icon.png" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>textsearch-ja: Project Home Page</title>
+</head>
+
+<body>
+<center><img style="border: none; margin-left: auto; margin-right: auto; " src="http://pgfoundry.org/images/elephantSmall.png" height="75" width="75" />
+<hr />
+<h1>textsearch-ja ホームページへようこそ</h1>
+<hr />
+</center>
+<p>
+形態素解析 または N-gram を使用した、組み込み型の日本語全文検索です。
+また、検索の他にも日本語を扱うためのユーティリティを提供しています。
+</p>
+<p>この textsearch-ja プロジェクトは <a href="http://www.postgresql.org">PostgreSQL</a> コミュニティによる <a href="http://pgfoundry.org">pgFoundry</a> の中の<a href="http://pgfoundry.org/projects/textsearch-ja">プロジェクト</a>です。</p>
+<ul>
+	<li><a href="http://pgfoundry.org/frs/?group_id=1000298">ダウンロード</a> : ソースコードのほか、Windows 用バイナリもダウンロードできます。</li>
+	<li><a href="http://pgfoundry.org/tracker/?group_id=1000298">バグレポート</li></li>
+	<li><a href="http://pgfoundry.org/mail/?group_id=1000298">メーリングリスト</a> への参加</li>
+</ul>
+<div>
+<a href="index.html">Here is an English page.</a>
+</div>
+<hr />
+
+<p>
+このプロジェクトでは「<a href="textsearch_ja.html">textsearch_ja</a>」と「<a href="textsearch_senna.html">textsearch_senna</a>」の2種類の全文検索インデックスがあります。
+それぞれ特徴があるため、用途に応じて使い分けてください。
+一般的には、文法的に整った文書を検索する場合には textsearch_ja (形態素解析) 、LIKE 演算子に近い結果を得たい場合には textsearch_senna (N-gram) が適しています。
+</p>
+<p>
+EUDC モジュールは全文検索ではありませんが、PostgreSQL で外字領域を含む日本語文書を扱う際に役立つユーティリティです。
+</p>
+
+<h2 id="textsearch_ja">textsearch_ja : 形態素解析</h2>
+<p><a href="textsearch_ja.html">textsearch_ja</a> は形態素解析を用いた全文検索機能です。
+PostgreSQL 8.3 で追加された組み込みテキスト検索を拡張するため、
+英語文書の検索と同様の方法で、日本語文書を検索することができます。
+検索は形態素解析を利用した単語単位で行われます。
+形態素解析には <a href="http://mecab.sourceforge.net/">MeCab</a> を使用しています。</p>
+<p>利点として、GIN または GiST インデックスをベースにしているため、全文検索用のインデックスがリカバリ可能であることが挙げられます。
+また、既に tsearch2 に対応している欧米言語を対象とした製品を大きく改変することなく、日本語対応できる強みがあります。</p>
+</p>
+
+<h2 id="textsearch_senna">textsearch_senna : N-gram</h2>
+<p><a href="textsearch_senna.html">textsearch_senna</a> では N-gram ベースの全文検索を行います。
+検索には、全文検索エンジン <a href="http://qwik.jp/senna/FrontPageJ.html">Senna</a> を使用しています。
+</p>
+<p>利点として、文字すべてをインデックス化するため LIKE 中間一致検索に近い結果を得ることができます。
+また、既に tsearch2 互換のインタフェースを備えるため、少々の設定変更で textsearch-ja と textsearch_senna を切り替えて使用することができます。
+ただし、クラッシュ・リカバリやアーカイブ・リカバリに対応していないことに注意してください。リカバリ後にインデックスの再作成を行う必要があります。
+</p>
+
+<h2 id="eudc">EUDC (End User Defined Character) : 外字対応文字コード</h2>
+<p>
+<a href="eudc.html">eudc</a> モジュールは、外字領域の文字コード変換をサポートしたエンコーディングです。
+シフトSJIS (SJIS) や EUC_JP と、UTF-8 の変換において、外字領域の変換を追加します。
+絵文字等の外字を扱う必要があり、かつクライアント・アプリケーションとデータベースで異なる文字コードを使う場合に有用です。
+</p>
+
+<h2 id="links">関連リンク</h2>
+<ul>
+	<li>tsearch に対応したソフトウェア製品
+		<ul>
+			<li><a href="http://www.mediawiki.org/wiki/MediaWiki/ja">MediaWiki</a> : Wiki</li>
+			<li><a href="http://sylpheed.sraoss.jp/ja/">Sylph-Searcher</a> : メーラ Sylpheed 内の全文検索</li>
+		</ul>
+	</li>
+	<li>カンファレンスや勉強会での紹介
+		<ul>
+			<li><a href="http://www.slideshare.net/iakio/oscdo2009-textsearch">textsearch_jaで全文検索</a>
+			(石田朗雄 氏, <a href="http://www.ospn.jp/osc2009-do/modules/eguide/event.php?eid=19">オープンソースカンファレンス 2009 Hokkaido</a>)</li>
+			<li><a href="http://www.postgresql.jp/events/postgresql-conference-2008-program/#technical_2">PostgreSQL の全文検索</a>
+			(佐藤友章 氏, PostgreSQL Conference 2008)</li>
+			<li><a href="http://labo.e-2.co.jp/data/php-study34-pgsql.pdf">PostgreSQLで日本語全文検索</a> [PDF]
+			(わたなべかずひろ 氏, <a href="http://events.php.gr.jp/events/show/46">第34回PHP勉強会</a>)</li>
+		</ul>
+	</li>
+	<li>他の PostgreSQL 組み込み型の全文検索システム
+		<ul>
+			<li><a href="http://sourceforge.jp/projects/ludia/">Ludia</a>
+			 : <a href="http://qwik.jp/senna/FrontPageJ.html">Senna</a> をエンジンとする全文検索システム</li>
+			<li><a href="http://pgestraier.projects.postgresql.org/">pgestraier</a>
+			 : <a href="http://hyperestraier.sourceforge.net/index.ja.html">Hyper Estraier</a> をエンジンとする全文検索システム</li>
+			<li><a href="http://pgfoundry.org/projects/pgrast/">pgRast</a>
+			 : <a href="http://projects.netlab.jp/rast/?FrontPage.ja">Rast</a> をエンジンとする全文検索システム</li>
+		</ul>
+	</li>
+</ul>
+
+<hr />
+<p class="footer">Copyright (c) 2008-2009, NIPPON TELEGRAPH AND TELEPHONE CORPORATION</p>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-10244036-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

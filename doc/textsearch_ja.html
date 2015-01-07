@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<link rel="icon" type="image/png" href="http://pgfoundry.org/images/elephant-icon.png" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>textsearch-ja: Project Home Page</title>
+</head>
+
+<body>
+<center>
+<img style="border: none; margin-left: auto; margin-right: auto; " src="http://pgfoundry.org/images/elephantSmall.png" height="75" width="75" />
+<hr />
+<h1>textsearch_ja : 形態素解析方式 全文検索</h1>
+</center>
+<div class="navigation"><a href="index-ja.html">Top</a> &gt; <a href="textsearch_ja.html">textsearch_ja</a><div>
+<hr />
+<p>形態素解析を使用した、組み込み型の日本語全文検索です。</p>
+<ul>
+	<li><a href="http://pgfoundry.org/frs/?group_id=1000298">ダウンロード</a> : ソースコードのほか、Windows 用バイナリもダウンロードできます。</li>
+	<li><a href="http://pgfoundry.org/tracker/?group_id=1000298">バグレポート</li></li>
+	<li><a href="http://pgfoundry.org/mail/?group_id=1000298">メーリングリスト</a> への参加</li>
+</ul>
+<hr />
+
+
+<ol>
+	<li><a href="#abstract">概要</a></li>
+	<li><a href="#install">インストール</a><ul>
+		<li><a href="#dependency">依存関係</a></li>
+		<li><a href="#build">ビルド</a></li>
+		<li><a href="#windows">Windowsへのインストール</a></li>
+	</ul></li>
+	<li><a href="#tsearch">テキスト検索機能</a><ul>
+		<li><a href="#index">インデックス (tsvector, tsquery)</a></li>
+		<li><a href="#ts_headline">検索結果の強調 (ts_headline)</a></li>
+		<li><a href="#ts_debug">解析結果の表示 (ts_debug)</a></li>
+		<li><a href="#synonym">類義語 (synonym)</a></li>
+		<li><a href="#stopword">ストップワード (stop word)</a></li>
+	</ul></li>
+	<li><a href="#others">その他の検索用関数</a><ul>
+		<li><a href="#web_query">Web検索互換クエリ (web_query)</a></li>
+	</ul></li>
+	<li><a href="#japanese">日本語解析機能</a><ul>
+		<li><a href="#ja_normalize">テキストの正規化 (ja_normalize)</a></li>
+		<li><a href="#ja_wakachi">分かち書き (ja_wakachi)</a></li>
+		<li><a href="#ja_analyze">mecab による解析 (ja_analyze)</a></li>
+		<li><a href="#furigana">ふりがな (furigana)</a></li>
+		<li><a href="#hiragana">ひらがな変換 (hiragana)</a></li>
+		<li><a href="#katakana">カタカナ変換 (katakana)</a></li>
+	</ul></li>
+	<li><a href="#todo">TODO</a></li>
+</ol>
+
+<hr />
+
+<h2 id="abstract">概要</h2>
+<p>日本語テキストの全文検索を行います。
+PostgreSQL 8.3 で追加された組み込みテキスト検索を拡張するため、
+英語文書の検索と同様の方法で、日本語文書を検索することができます。
+検索は形態素解析を利用した単語単位で行われます。
+形態素解析には <a href="http://mecab.sourceforge.net/">MeCab</a> を使用しています。</p>
+<p>利点として、GIN または GiST インデックスをベースにしているため、全文検索用のインデックスがリカバリ可能であることが挙げられます。
+また、既に tsearch2 に対応している欧米言語を対象とした製品を大きく改変することなく、日本語対応できる強みがあります。</p>
+<p>非自立語を除外してキーワードを抽出するため、インデックスのサイズを小さく押さえられます。
+以下の例では「すもも」と「もも」のみ単語として扱っています。
+単語ごとではなく文字ごとの検索が必要な場合には、代わりに <a href="textsearch_senna.html">textsearch_senna</a> を使用してください。</p>
+<pre><code>=# SELECT to_tsvector('japanese', 'すもももももももものうち');
+      to_tsvector
+-----------------------
+ 'すもも':1 'もも':2,3
+(1 row)</code></pre>
+
+<h2 id="install">インストール</h2>
+<h3 id="dependency">依存関係</h3>
+以下の外部プロジェクトに依存しています。
+<ul>
+	<li><a href="http://www.postgresql.org/">PostgreSQL</a> : 8.3 以降</li>
+	<li id="mecab"><a href="http://sourceforge.net/project/showfiles.php?group_id=177856&package_id=204917">mecab</a>
+			 : 0.97 にて動作確認。
+Windows 版のインストーラを使う場合、<a href="mecab-encoding.png">辞書の文字コードの選択</a> で UTF-8 を選んでください。
+mecab-dict-index で辞書を再編成することもできます。
+詳しくは MeCab のマニュアルを参照してください。
+</li>
+	<li><a href="http://sourceforge.net/project/showfiles.php?group_id=177856&package_id=205275">mecab-ipadic</a>
+			 : 2.7.0-20070801 にて動作確認。辞書とサーバの文字エンコードを一致させる必要があります。</li>
+</ul>
+
+<h3 id="build">ビルド</h3>
+<p>pgxs を使ってビルドできます。</p>
+<pre>$ cd textsearch_ja
+$ make USE_PGXS=1
+$ su
+$ make USE_PGXS=1 install</pre>
+
+<p>その後、データベースに関数を登録します。</p>
+<pre>$ pg_ctl start
+$ psql -f $PGSHARE/contrib/textsearch_ja.sql your_database</pre>
+
+<h3 id="windows">Windowsへのインストール</h3>
+<p>
+Windows へバイナリをインストールするには、PostgreSQL をインストールしたフォルダ (通常は C:\Program Files\PostgreSQL\*.*, 以下 %PGHOME%) へファイルを展開します。
+MeCab をインストール後、textsearch_ja.dll を %PGHOME%\lib に配置します。
+その後、textsearch_ja.sql によるデータベースへの登録を行います。
+</p>
+
+<h2 id="tsearch">テキスト検索機能</h2>
+<p>インストールすると、pg_catalog.japanese という名前のテキスト検索設定が登録されます。
+以下の形式で使用します。</p>
+<ul>
+	<li>to_tsvector('japanese', '検索対象')</li>
+	<li>to_tsquery('japanese', 'クエリ')</li>
+</ul>
+
+<p>入力テキストは、まず、後述の ja_normalize() 関数を使用して正規化されます。
+正規化後の文字列に対して、形態素解析で単語を分割してインデックスを張ります。</p>
+<p>サーバエンコーディングと、mecab のエンコーディングを一致させる必要があります。
+プラットホームによっては、mecab 辞書の再コンパイルが必要になるかもしれません。</p>
+
+<h3 id="index">インデックス (tsvector, tsquery)</h3>
+<p>
+textsearch では、関数インデックスを使用して直接検索する方式と、
+追加した補助カラムをキーとして検索する方式があります。
+詳しくはドキュメント <a href="http://developer.postgresql.org/pgdocs/postgres/textsearch-tables.html#TEXTSEARCH-TABLES-INDEX">Full Text Search/Creating Indexes</a> を参照してください。
+補助カラムの自動更新は、<a href="http://developer.postgresql.org/pgdocs/postgres/textsearch-features.html#TEXTSEARCH-UPDATE-TRIGGERS">tsvector_update_trigger</a> に任せることもできます。
+</p>
+<pre><code>=# CREATE TABLE test (id serial, t text);
+=# COPY test(t) FROM '...';
+=# CREATE INDEX idx ON test USING gin(to_tsvector('japanese', t));
+=# ANALYZE;
+=# EXPLAIN SELECT * FROM test WHERE to_tsvector('japanese', t) @@ to_tsquery('japanese', 'リレーショナルデータベース');
+                                                      QUERY PLAN
+-----------------------------------------------------------------------------------------------------------------------
+ Index Scan using idx on test  (cost=0.00..8.27 rows=1 width=248)
+   Index Cond: (to_tsvector('japanese'::regconfig, t) @@ '''リレーショナル'' & ''データベース'''::tsquery)
+(2 rows)</code></pre>
+
+<h3 id="ts_headline">検索結果の強調 (ts_headline)</h3>
+<p>
+ts_headline() に対応しており、一致した箇所を切り出して強調表示できます。
+</p>
+<pre><code>=# \d document
+                         Table "public.document"
+ Column |   Type   |                      Modifiers
+--------+----------+-------------------------------------------------------
+ id     | integer  | not null default nextval('document_id_seq'::regclass)
+ body   | text     |
+ tsv    | tsvector |
+Indexes:
+    "document_pkey" PRIMARY KEY, btree (id)
+    "document_tsv_index" gin (tsv)
+Triggers:
+    tsv_trigger BEFORE INSERT OR UPDATE ON document FOR EACH ROW EXECUTE PROCEDURE
+      tsvector_update_trigger('tsv', 'pg_catalog.japanese', 'body')
+
+=# SELECT id, ts_rank_cd(tsv, query) AS rank, ts_headline('japanese', body, query)
+     FROM document, to_tsquery('japanese', 'リーフページ') AS query
+    WHERE tsv @@ query ORDER BY rank DESC;
+ id |   rank   |                                                                 ts_headline
+----+----------+----------------------------------------------------------------------------------------------------------------------------------------------
+  3 | 0.108333 | &lt;b&gt;ページ&lt;/b&gt;中で隣接しているキーである。これは非ユニークキーに対しては動作しない ( たとえば、いくつかの&lt;b&gt;リーフ&lt;/b&gt;&lt;b&gt;ページ&lt;/b&gt;にまたがっ
+  2 |     0.01 | &lt;b&gt;ページ&lt;/b&gt;を指しているはずである。同じ方法で、つまりヒープタプルへのリンクを調査することで、&lt;b&gt;リーフ&lt;/b&gt;レベルにある複数の item
+(2 rows)</code></pre>
+
+<h3 id="ts_debug">解析結果の表示 (ts_debug)</h3>
+<pre><code>=# SELECT * FROM ts_debug('japanese', '日本語とEnglishがmixedな文も解析OKです。');
+   alias   |    description    |  token  |  dictionaries  |  dictionary  |  lexemes
+-----------+-------------------+---------+----------------+--------------+-----------
+ word      | Word, all letters | 日本語  | {simple}       | simple       | {日本語}
+ blank     | Space symbols     | と      | {}             |              |
+ asciiword | Word, all ASCII   | English | {english_stem} | english_stem | {english}
+ blank     | Space symbols     | が      | {}             |              |
+ asciiword | Word, all ASCII   | mixed   | {english_stem} | english_stem | {mix}
+ blank     | Space symbols     | な      | {}             |              |
+ word      | Word, all letters | 文      | {simple}       | simple       | {文}
+ blank     | Space symbols     | も      | {}             |              |
+ word      | Word, all letters | 解析    | {simple}       | simple       | {解析}
+ asciiword | Word, all ASCII   | OK      | {english_stem} | english_stem | {ok}
+ blank     | Space symbols     | です    | {}             |              |
+ blank     | Space symbols     | 。      | {}             |              |
+(12 rows)</code></pre>
+
+<h3 id="synonym">類義語 (synonym)</h3>
+<p>
+類義語辞書を使用できます。
+<code>&lt;インストール先&gt;/share/tsearch_data/japanese.syn</code> というテキストファイルを用意します。
+文字エンコーディングは UTF-8 でなければなりません。
+</p>
+<pre> バキューム	vacuum
+ ポスグレ	pgsql</pre>
+類義語辞書は、以下のSQLを使って登録します。
+<pre><code>-- Install japanese synonym dictionary
+CREATE TEXT SEARCH DICTIONARY japanese_syn (
+    TEMPLATE = synonym,
+    SYNONYMS = japanese
+);
+ALTER TEXT SEARCH CONFIGURATION japanese
+    ALTER MAPPING FOR word, hword_part, hword WITH japanese_syn, simple;</code></pre>
+<p>
+類義語は変換して処理されるため、表記に揺れがあっても検索や強調ができます。
+</p>
+<pre><code>=# SELECT ts_headline('japanese', 'autovacuumを使えばバキュームも手間要らず',  to_tsquery('japanese', 'VACUUM'));
+                   ts_headline
+-------------------------------------------------
+ autovacuumを使えば&lt;b&gt;バキューム&lt;/b&gt;も手間要らず
+(1 row)</code></pre>
+
+<p>
+同様に、<code>$PGDATA/share/tsearch_data/english.syn</code> を用意すれば、
+英語の類義語辞書も同時に使用できます。
+このとき、英語と日本語で必ずしも *.syn を分ける必要はありませんが、
+英数字(半角)には必ず英語辞書が使われ、
+日本語文字(全角)には必ず日本語辞書が使われるため、
+分割したほうが若干変換速度が向上します。
+</p>
+<pre><code>-- Install english synonym dictionary
+CREATE TEXT SEARCH DICTIONARY english_syn (
+    TEMPLATE = synonym,
+    SYNONYMS = english
+);
+ALTER TEXT SEARCH CONFIGURATION japanese
+    ALTER MAPPING FOR asciiword, hword_asciipart, asciihword WITH english_syn, english_stem;</code></pre>
+
+<h3 id="stopword">ストップワード (stop word)</h3>
+<p>
+現在、以下の品詞はストップワード(blank)とみなし、インデックス化していません。
+不必要なインデックス・エントリを減らせるため、単純なスペース区切りによる分かち書きよりも効率が高まります。
+</p>
+<ul>
+	<li>助詞</li>
+	<li>助動詞</li>
+	<li>記号</li>
+	<li>名詞,代名詞</li>
+	<li>名詞,非自立</li>
+	<li>感動詞</li>
+	<li>フィラー</li>
+	<li>その他</li>
+</ul>
+<p>
+実際には、類義語辞書と同じ方式で、textsearch 機能の<a href="http://developer.postgresql.org/pgdocs/postgres/textsearch-dictionaries.html#TEXTSEARCH-STOPWORDS">ストップワード辞書</a>機能を使うことも可能です。
+ただし、既に MeCab により単語区分が分かっているため、辞書よりも先に判定を行っています。
+将来のバージョンでは、動作を選択可能にすることを考えています。
+</p>
+
+<h2 id="others">その他の検索用関数</h2>
+<h3 id="web_query">Web検索互換クエリ (web_query)</h3>
+<p>
+textsearch は AND, OR, NOT 検索に &amp;, |, ! を使用しています。
+ウェブ検索で一般的に使用される制御演算子とは異なるため、検索フォームへの入力をそのまま条件に使用するには不便です。
+関数 web_query() は、AND, OR, NOT 演算子として、スペース, OR (大文字), - を使用します。
+</p>
+<pre><code>=# SELECT to_tsquery('english', 'Relational Database');
+ERROR:  syntax error in tsquery: "Relational Database"
+
+=# SELECT to_tsquery('english', web_query('Relational Database'));
+     to_tsquery
+---------------------
+ 'relat' & 'databas'
+(1 row)</code></pre>
+
+<p>
+注意: 現在、OR 演算子よりも AND 演算子のほうが結合順序が高いままです。
+一般的なウェブ検索では、OR 演算子のほうが高いものが多いようです。
+</p>
+
+<h2 id="japanese">日本語解析機能</h2>
+<p>
+日本語の文字列を扱う関数と、MeCab を直接利用する関数が登録されます。
+</p>
+
+<h3 id="ja_normalize">テキストの正規化 (ja_normalize)</h3>
+<p>
+ja_normalize(text) は、入力された日本語テキストを正規化します。
+大文字小文字は変換しません。
+</p>
+<ul>
+	<li>全角アルファベット、数字、記号 → 半角</li>
+	<li>半角カタカナ → 全角カタカナ</li>
+</ul>
+<pre><code>=# SELECT ja_normalize('ｶﾀｶﾅは全角に、ＡＢＣ１２３は半角に。ﾀﾞｸﾃﾝにも対応。');
+                     ja_normalize
+------------------------------------------------------
+ カタカナは全角に、ABC123は半角に。ダクテンにも対応。
+(1 row)</code></pre>
+<p>※ 最新版では、半角・全角文字混じりであっても全角文字の前後にスペースを補うことは無くなりました。</p>
+
+<h3 id="ja_wakachi">分かち書き (ja_wakachi)</h3>
+ja_wakachi(text) は、入力された日本語テキストを分かち書きします。
+入力の正規化は行いません。
+<pre><code>=# SELECT ja_wakachi('分かち書きも使用できます。スペースで区切られます。');
+                          ja_wakachi
+---------------------------------------------------------------
+ 分かち書き も 使用 でき ます 。 スペース で 区切ら れ ます 。
+(1 row)</code></pre>
+
+
+<h3 id="ja_analyze">mecab による解析 (ja_analyze)</h3>
+ja_analyze(text) は、入力された日本語テキストを mecab で解析した結果を返します。
+<pre><code>=# SELECT * FROM ja_analyze('mecabを利用して形態素解析をします。');
+  word  |  type  | subtype1 | subtype2 | subtype3 |  conjtype  | conjugation | basic  |    ruby    | pronounce
+--------+--------+----------+----------+----------+------------+-------------+--------+------------+------------
+ mecab  | 名詞   | 一般     |          |          |            |             | mecab  | mecab      | mecab
+ を     | 助詞   | 格助詞   | 一般     |          |            |             | を     | ヲ         | ヲ
+ 利用   | 名詞   | サ変接続 |          |          |            |             | 利用   | リヨウ     | リヨー
+ し     | 動詞   | 自立     |          |          | サ変・スル | 連用形      | する   | シ         | シ
+ て     | 助詞   | 接続助詞 |          |          |            |             | て     | テ         | テ
+ 形態素 | 名詞   | 一般     |          |          |            |             | 形態素 | ケイタイソ | ケイタイソ
+ 解析   | 名詞   | サ変接続 |          |          |            |             | 解析   | カイセキ   | カイセキ
+ を     | 助詞   | 格助詞   | 一般     |          |            |             | を     | ヲ         | ヲ
+ し     | 動詞   | 自立     |          |          | サ変・スル | 連用形      | する   | シ         | シ
+ ます   | 助動詞 |          |          |          | 特殊・マス | 基本形      | ます   | マス       | マス
+ 。     | 記号   | 句点     |          |          |            |             | 。     | 。         | 。
+(11 rows)</code></pre>
+
+<h3 id="furigana">ふりがな (furigana)</h3>
+<p>
+MeCab を利用し、ふりがな（発音）をカタカナで取得します。
+</p>
+<pre><code>=# SELECT furigana('ふりがな（発音）を取得します。');
+                furigana
+----------------------------------------
+ フリガナ（ハツオン）ヲシュトクシマス。
+(1 row)</code></pre>
+
+<h3 id="hiragana">ひらがな変換 (hiragana)</h3>
+<p>
+半角／全角カタカナをひらがなへ変換します。
+</p>
+<pre><code>=# SELECT hiragana('ﾀﾞｸﾃﾝとゼンカクをひらがなに変換');
+              hiragana
+------------------------------------
+ だくてんとぜんかくをひらがなに変換
+(1 row)</code></pre>
+
+<h3 id="katakana">カタカナ変換 (katakana)</h3>
+<p>
+ひらがなを全角カタカナへ変換します。
+</p>
+<pre><code>=# SELECT katakana('ひらがなを全角カタカナに変換');
+           katakana
+------------------------------
+ ヒラガナヲ全角カタカナニ変換
+(1 row)</code></pre>
+
+<h2 id="todo">TODO</h2>
+<dl>
+	<dt>web_query を一般的なウェブサイト互換にする</dt>
+	<dd>演算子の優先順位、除外、連語などに対応する必要があります。</dd>
+</dl>
+
+<hr />
+<div class="navigation"><a href="index-ja.html">Top</a> &gt; <a href="textsearch_ja.html">textsearch_ja</a><div>
+<p class="footer">Copyright (c) 2008-2009, NIPPON TELEGRAPH AND TELEPHONE CORPORATION</p>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-10244036-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

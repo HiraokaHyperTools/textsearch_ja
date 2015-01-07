@@ -1,0 +1,55 @@
+textsearch_ja - version 8.4.2 (2009-07-07)
+
+日本語テキストの全文テキスト検索を行います。
+PostgreSQL 8.3 で追加された組み込みテキスト検索を拡張するため、
+英語文書の検索と同様の方法で、日本語文書を検索することができます。
+
+詳しくは、doc/textsearch_ja.html もしくは
+プロジェクトのホームページを参照してください。
+http://textsearch-ja.projects.postgresql.org/index-ja.html
+
+検索は形態素解析を利用した単語単位で行われます。
+形態素解析には MeCab (http://mecab.sourceforge.net/) を使用しています。
+
+■■■ ディレクトリ構成 ■■■
+
+- dict : サンプルの類義語辞書ファイルです。
+- doc : ドキュメント文書です。
+- expected, sql : 動作確認用のリグレッション・テストです。
+
+■■■ インストール ■■■
+
+■ mecab-0.97 のインストール
+./configure --enable-utf8-only
+make
+sudo make install
+
+■ mecab-ipadic-2.7.0-20070801 のインストール
+./configure --with-charset=utf8
+make
+sudo make install
+
+■ OS 環境設定
+export LD_LIBRARY_PATH=/usr/local/lib
+
+(Windows の場合)
+・HKEY_CURRENT_USER\Software\mecab
+        文字列 [mecabrc] = C:\msys\1.0\local\etc\mecabrc
+・C:\msys\1.0\local\etc\mecabrc
+        dicdir = C:\msys\1.0\local\lib\mecab\dic\ipadic
+
+■ contrib/textsearch_ja のインストール
+make
+sudo make install
+psql -f textsearch_ja.sql
+
+■ 辞書変換 と PostgreSQL の設定
+DATABASE のエンコーディングと、MeCab の辞書のエンコーディングを
+一致させる必要があります。
+
+(UTF-8 を使う場合)
+/usr/local/libexec/mecab/mecab-dict-index -f euc-jp -t utf-8
+initdb --no-locale --encoding=utf8
+
+----
+Copyright (c) 2008-2009, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
