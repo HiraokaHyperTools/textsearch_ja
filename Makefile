@@ -1,14 +1,14 @@
 
-!IFNDEF PGVER
-!ERROR PGVER=PG94 or PGVER=PG82
+!IFNDEF PGV
+!ERROR PGV=9.4 or PGV=9.1
 !ENDIF
 
 !IFNDEF CPU
 !ERROR CPU=x86 or CPU=x64
 !ENDIF
 
-BINDIR = bin\$(PGVER)_$(CPU)
-OBJDIR = obj\$(PGVER)_$(CPU)
+BINDIR = bin\$(PGV)\$(CPU)
+OBJDIR = obj\$(PGV)\$(CPU)
 !IF "$(CPU)" == "x86"
 CXX = "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\cl.exe"
 LINK = "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe"
@@ -24,9 +24,9 @@ MACABINC = libmecab-sdk64
 !ELSE
 !ERROR CPU Unknown. CPU=x86 or CPU=x64
 !ENDIF
-CXXFLAGS = /D$(PGVER) /DBUILDING_DLL /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /D_WINDLL /D_ATL_STATIC_REGISTRY /LD /MT /Ot /GL /DUNICODE /c /EHsc 
-INCS = /I ../include /I $(PGVER)/include /I $(PGVER)/include/server /I $(MACABINC) /I hasphl/include
-LIBS = /libpath:"$(LIB)" $(MECABLIB) $(PGVER)/lib_$(CPU)/postgres.lib /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /MACHINE:$(CPU) /DLL /RELEASE 
+CXXFLAGS = /DBUILDING_DLL /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /D_WINDLL /D_ATL_STATIC_REGISTRY /LD /MT /Ot /GL /DUNICODE /c /EHsc 
+INCS = /I ../include /I PGfiles/$(PGV)/include /I PGfiles/$(PGV)/include/server /I $(MACABINC)
+LIBS = /libpath:"$(LIB)" $(MECABLIB) PGfiles/$(PGV)/lib_$(CPU)/postgres.lib /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /MACHINE:$(CPU) /DLL /RELEASE 
 # vsvars32等が定義する環境変数を上書き。特に、x86のLIBが厄介。
 INCLUDE = include;C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\INCLUDE;C:\Program Files (x86)\Windows Kits\8.0\include\shared;C:\Program Files (x86)\Windows Kits\8.0\include\um;C:\Program Files (x86)\Windows Kits\8.0\include\winrt
 

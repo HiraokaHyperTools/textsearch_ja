@@ -1,0 +1,3 @@
+[submodule "PGfiles"]
+	path = PGfiles
+	url = https://github.com/HiraokaHyperTools/PGfiles.git
