@@ -7,8 +7,11 @@
 !ERROR CPU=x86 or CPU=x64
 !ENDIF
 
+VER=9.0.0
+
 BINDIR = bin\$(PGV)\$(CPU)
 OBJDIR = obj\$(PGV)\$(CPU)
+CP = copy
 !IF "$(CPU)" == "x86"
 CXX = "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\cl.exe"
 LINK = "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe"
@@ -54,3 +57,33 @@ $(BINDIR)\textsearch_ja.dll: $(OBJDIR)\textsearch_ja.obj $(OBJDIR)\encoding_eucj
 clean:
 	rmdir /s /q $(OBJDIR)
 	rmdir /s /q $(BINDIR)
+
+PACKDIR = pack\textsearch_ja-$(VER)-postgresql-$(PGV)-$(CPU)
+
+pack: all \
+ $(PACKDIR)\bin \
+ $(PACKDIR)\bin\mecabrc \
+ $(PACKDIR)\lib \
+ $(PACKDIR)\lib\textsearch_ja.dll \
+ $(PACKDIR)\share\extension \
+ $(PACKDIR)\share\extension\textsearch_ja--9.0.0.sql \
+ $(PACKDIR)\share\extension\textsearch_ja.control
+
+$(PACKDIR)\bin:
+	mkdir $@
+$(PACKDIR)\lib:
+	mkdir $@
+$(PACKDIR)\share\extension:
+	mkdir $@
+
+$(PACKDIR)\bin\mecabrc: mecabrc
+	$(CP) $** $@
+
+$(PACKDIR)\lib\textsearch_ja.dll: $(BINDIR)\textsearch_ja.dll
+	$(CP) $** $@
+
+$(PACKDIR)\share\extension\textsearch_ja--9.0.0.sql: textsearch_ja-$(PGV).sql.in
+	$(CP) $** $@
+
+$(PACKDIR)\share\extension\textsearch_ja.control: textsearch_ja.control
+	$(CP) $** $@
