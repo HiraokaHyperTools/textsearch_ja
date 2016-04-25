@@ -28,7 +28,7 @@ MACABINC = libmecab-sdk64
 !ERROR CPU Unknown. CPU=x86 or CPU=x64
 !ENDIF
 CXXFLAGS = /DBUILDING_DLL /DWIN32 /DNDEBUG /D_WINDOWS /D_USRDLL /D_WINDLL /D_ATL_STATIC_REGISTRY /LD /MT /Ot /GL /DUNICODE /c /EHsc 
-INCS = /I ../include /I PGfiles/$(PGV)/include /I PGfiles/$(PGV)/include/server /I $(MACABINC)
+INCS = /I ../include_$(CPU) /I PGfiles/$(PGV)/include_$(CPU) /I PGfiles/$(PGV)/include_$(CPU)/server /I $(MACABINC)
 LIBS = /libpath:"$(LIB)" $(MECABLIB) foo/$(CPU)/foo.lib PGfiles/$(PGV)/lib_$(CPU)/postgres.lib /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /MACHINE:$(CPU) /DLL /RELEASE 
 # vsvars32等が定義する環境変数を上書き。特に、x86のLIBが厄介。
 INCLUDE = include;C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\INCLUDE;C:\Program Files (x86)\Windows Kits\8.0\include\shared;C:\Program Files (x86)\Windows Kits\8.0\include\um;C:\Program Files (x86)\Windows Kits\8.0\include\winrt
