@@ -8,3 +8,5 @@ nmake PGV=9.4 CPU=x64 pack || pause
 nmake PGV=9.4 CPU=x86 pack || pause
 nmake PGV=9.5 CPU=x64 pack || pause
 nmake PGV=9.5 CPU=x86 pack || pause
+nmake PGV=9.6 CPU=x64 pack || pause
+nmake PGV=9.6 CPU=x86 pack || pause
