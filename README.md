@@ -38,7 +38,8 @@ CREATE EXTENSION textsearch_ja;
 ## 動作確認
 
 ```sql
-check_textsearch_ja=# SELECT ja_wakachi('分かち書きを行います。');
+SELECT ja_wakachi('分かち書きを行います。');
+
          ja_wakachi
 ----------------------------
  分かち書き を 行い ます 。
@@ -47,6 +48,7 @@ check_textsearch_ja=# SELECT ja_wakachi('分かち書きを行います。');
 
 ```sql
 SELECT furigana('漢字の読みをカタカナで返します。');
+
                furigana
 --------------------------------------
  カンジノヨミヲカタカナデカエシマス。
@@ -55,6 +57,7 @@ SELECT furigana('漢字の読みをカタカナで返します。');
 
 ```sql
 SELECT * FROM ts_debug('japanese', E'日\n本\n語\n文\n字\n中\nの\n改\n行\nは\n除\n去\n');
+
  alias |    description    | token  |  dictionaries   |  dictionary   | lexemes
 -------+-------------------+--------+-----------------+---------------+----------
  word  | Word, all letters | 日本語 | {japanese_stem} | japanese_stem | {日本語}
@@ -69,6 +72,7 @@ SELECT * FROM ts_debug('japanese', E'日\n本\n語\n文\n字\n中\nの\n改\n行
 
 ```sql
 SELECT * FROM ts_debug('japanese', E'Line\nbreaks\nin\nEnglish\ntext\nare\nreserved.');
+
    alias   |   description   |  token   |  dictionaries  |  dictionary  |  lexemes
 -----------+-----------------+----------+----------------+--------------+-----------
  asciiword | Word, all ASCII | Line     | {english_stem} | english_stem | {line}
@@ -90,6 +94,7 @@ SELECT * FROM ts_debug('japanese', E'Line\nbreaks\nin\nEnglish\ntext\nare\nreser
 
 ```sql
  SELECT * FROM ts_debug('japanese', '日本語とEnglishがmixedな文も解析OKです。');
+ 
    alias   |    description    |  token  |  dictionaries   |  dictionary   |  lexemes
 -----------+-------------------+---------+-----------------+---------------+-----------
  word      | Word, all letters | 日本語  | {japanese_stem} | japanese_stem | {日本語}
@@ -110,8 +115,9 @@ SELECT * FROM ts_debug('japanese', E'Line\nbreaks\nin\nEnglish\ntext\nare\nreser
 ```sql
 SELECT s
   FROM regexp_split_to_table(to_tsvector('japanese',
-check_textsearch_ja(# '語尾は基本形に戻されます。')::text, ' ') AS t(s)
+ '語尾は基本形に戻されます。')::text, ' ') AS t(s)
   ORDER BY s;
+  
      s
 ------------
  'れる':4
@@ -126,6 +132,7 @@ SELECT s
    FROM regexp_split_to_table(to_tsvector('japanese',
  'ユーザとユーザーは正規化されます。ミラーとミラは別扱い。')::text, ' ') AS t(s)
   ORDER BY s;
+  
       s
 --------------
  'する':5
