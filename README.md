@@ -16,12 +16,14 @@ PostgreSQL 10.5 Windows x86-32 の場合:
 
 - `C:\Program Files (x86)\MeCab\bin\libmecab.dll` を、`C:\Program Files (x86)\PostgreSQL\10\bin` へコピー
 - `textsearch_ja-9.0.0-postgresql-10.0-x86` フォルダーの中身を `C:\Program Files (x86)\PostgreSQL\10` へコピー
+- `C:\Program Files (x86)\PostgreSQL\10\bin\mecabrc` ファイルの `dicdir` のパス `C:\Program Files (x86)\MeCab\dic\ipadic` が既定のものから変更していたら修正
 
 PostgreSQL 10.5 Windows x86-64 の場合:
 
 - [cmecab-java](https://code.google.com/archive/p/cmecab-java/downloads) へ向かい、`mecab-0.996_x64.zip` をダウンロードして展開
 - `mecab/bin/libmecab.dll` を、`C:\Program Files\PostgreSQL\10\bin` へコピー
 - `textsearch_ja-9.0.0-postgresql-10.0-x64` フォルダーの中身を `C:\Program Files (x86)\PostgreSQL\10` へコピー
+- `C:\Program Files\PostgreSQL\10\bin\mecabrc` ファイルの `dicdir` のパス `C:\Program Files (x86)\MeCab\dic\ipadic` が既定のものから変更していたら修正
 
 続き:
 
