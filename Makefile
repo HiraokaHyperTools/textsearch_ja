@@ -13,8 +13,8 @@ BINDIR = bin\$(PGV)\$(CPU)
 OBJDIR = obj\$(PGV)\$(CPU)
 CP = copy
 !IF "$(CPU)" == "x86"
-CXX = "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\cl.exe"
-LINK = "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe"
+CXX = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.14.26428\bin\Hostx86\x86\cl.exe"
+LINK = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.14.26428\bin\Hostx86\x86\link.exe"
 LIB = C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\lib;C:\Program Files (x86)\Windows Kits\8.0\lib\win8\um\x86
 MECABLIB = libmecab-sdk/libmecab.lib
 MACABINC = libmecab-sdk
