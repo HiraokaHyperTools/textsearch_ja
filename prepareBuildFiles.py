@@ -54,6 +54,8 @@ variants = (
     ("PG110", 11.0, "x64"),
     ("PG120", 12.0, "x64"),
     ("PG130", 13.0, "x64"),
+    ("PG140", 14.0, "x64"),
+    ("PG150", 15.0, "x64"),
 )
 
 for PGVER, PGVERDIR, CPU in variants:
@@ -68,7 +70,7 @@ for PGVER, PGVERDIR, CPU in variants:
             "toolSetName": toolSetName,
             "PGVER": PGVER,
             "CPU": CPU,
-            "CMAKE_GENERATOR_INSTANCE": "H:/Program Files (x86)/Microsoft Visual Studio/2017/Professional",
+            "CMAKE_GENERATOR_INSTANCE": "C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional",
         }
         writeTextFile(batFilePath, template % dict)
         buildAll.append("call %s" % (batFilePath, ))

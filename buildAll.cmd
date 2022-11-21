@@ -7,3 +7,5 @@ call PG100_x64_v141_xp/build.cmd
 call PG110_x64_v141_xp/build.cmd
 call PG120_x64_v141_xp/build.cmd
 call PG130_x64_v141_xp/build.cmd
+call PG140_x64_v141_xp/build.cmd
+call PG150_x64_v141_xp/build.cmd

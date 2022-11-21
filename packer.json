@@ -252,11 +252,67 @@
     }
   }, 
   {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-14.0-x64/lib/", 
+      "from": "PG140_x64_v141_xp/Release/textsearch_ja.dll"
+    }
+  }, 
+  {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-14.0-x64/bin/", 
+      "from": "mecabrc"
+    }
+  }, 
+  {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-14.0-x64/share/extension/", 
+      "from": "textsearch_ja.control"
+    }
+  }, 
+  {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-14.0-x64/share/extension/textsearch_ja--9.0.0.sql", 
+      "from": "textsearch_ja-14.0.sql"
+    }
+  }, 
+  {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-15.0-x64/lib/", 
+      "from": "PG150_x64_v141_xp/Release/textsearch_ja.dll"
+    }
+  }, 
+  {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-15.0-x64/bin/", 
+      "from": "mecabrc"
+    }
+  }, 
+  {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-15.0-x64/share/extension/", 
+      "from": "textsearch_ja.control"
+    }
+  }, 
+  {
+    "task": "copy", 
+    "param": {
+      "to": "pack/textsearch_ja-9.0.0-postgresql-15.0-x64/share/extension/textsearch_ja--9.0.0.sql", 
+      "from": "textsearch_ja-15.0.sql"
+    }
+  }, 
+  {
     "task": "7z", 
     "param": {
       "rawFrom": "*", 
       "wd": "pack", 
-      "to": "packs/20210817.7z"
+      "to": "packs/20221121.7z"
     }
   }
 ]
