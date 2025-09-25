@@ -1,8 +1,6 @@
 # textsearch_ja
 
-[textsearch_ja : 形態素解析方式 全文検索](https://web.archive.org/web/20170423100313/http://textsearch-ja.projects.pgfoundry.org/textsearch_ja.html) を、PostgreSQL 9.4 - 10 Windows 版で楽しめるように助力いたします。
-
-自炊方法については [build.md](build.md) を参照。
+[textsearch_ja : 形態素解析方式 全文検索](https://web.archive.org/web/20170423100313/http://textsearch-ja.projects.pgfoundry.org/textsearch_ja.html) を、PostgreSQL 9.6 - 17.0 Windows 版で楽しめるように助力いたします。自炊方法については [build.md](build.md) を参照。
 
 ## インストール方法
 
