@@ -1,5 +1,6 @@
 \set ECHO all
 SET client_encoding = utf8;
+CREATE EXTENSION textsearch_ja;
 
 SELECT ja_wakachi('分かち書きを行います。');
 

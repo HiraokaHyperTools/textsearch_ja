@@ -10,7 +10,7 @@
 
 [MeCab](http://taku910.github.io/mecab/) をインストールします。
 
-[mecab-0.996.exe](https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7WElGUGt6ejlpVXc) をダウンロードしてインストールします。
+[mecab-0.996.exe](https://drive.google.com/file/d/0Bygl-em20CSKTllwck5kVGZ6ZVE/view?usp=sharing&resourcekey=0-i3QLhrj1qc4wVpSp29Bb1w) をダウンロードしてインストールします。
 
 辞書は `UTF-8` しか動作確認していません。
 

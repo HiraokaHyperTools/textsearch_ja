@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Runs great on Python 2.7.15 (x86)
+# Runs great on Python 3.13.5 (x64)
 
 import os
 import json
 import shutil
 import subprocess
+import errno
 
 def makeDirs(path):
 	try:
 		os.makedirs(path)
 	except OSError as e:
-		if e.errno != os.errno.EEXIST:
+		if e.errno != errno.EEXIST:
 			raise
 
 def getDirFromCopyTo(path):

@@ -1,5 +1,6 @@
 \set ECHO all
 SET client_encoding = utf8;
+CREATE EXTENSION textsearch_ja;
 
 SELECT ja_normalize('０１２３４５６７８９0123456789');
 SELECT ja_normalize('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
