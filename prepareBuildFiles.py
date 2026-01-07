@@ -58,6 +58,7 @@ combinations = (
     ("PG150", "15.0", "x64"),
     ("PG160", "16.0", "x64"),
     ("PG170", "17.0", "x64"),
+    ("PG180", "18.0", "x64"),
 )
 
 for PGVER, PGVERDIR, CPU in combinations:

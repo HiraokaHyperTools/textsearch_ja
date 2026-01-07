@@ -9,3 +9,4 @@ call PG140_x64_v143/build.cmd
 call PG150_x64_v143/build.cmd
 call PG160_x64_v143/build.cmd
 call PG170_x64_v143/build.cmd
+call PG180_x64_v143/build.cmd

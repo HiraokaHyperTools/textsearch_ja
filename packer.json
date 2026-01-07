@@ -308,10 +308,38 @@
     }
   },
   {
+    "task": "copy",
+    "param": {
+      "from": "PG180_x64_v143/Release/textsearch_ja.dll",
+      "to": "pack/textsearch_ja-9.0.0-postgresql-18.0-x64/lib/"
+    }
+  },
+  {
+    "task": "copy",
+    "param": {
+      "from": "mecabrc",
+      "to": "pack/textsearch_ja-9.0.0-postgresql-18.0-x64/bin/"
+    }
+  },
+  {
+    "task": "copy",
+    "param": {
+      "from": "textsearch_ja.control",
+      "to": "pack/textsearch_ja-9.0.0-postgresql-18.0-x64/share/extension/"
+    }
+  },
+  {
+    "task": "copy",
+    "param": {
+      "from": "textsearch_ja-18.0.sql",
+      "to": "pack/textsearch_ja-9.0.0-postgresql-18.0-x64/share/extension/textsearch_ja--9.0.0.sql"
+    }
+  },
+  {
     "task": "7z",
     "param": {
       "rawFrom": "*",
-      "to": "packs/20250925.7z",
+      "to": "packs/20260107.7z",
       "wd": "pack"
     }
   }
